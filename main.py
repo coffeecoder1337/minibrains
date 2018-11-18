@@ -26,6 +26,7 @@ class Game:
     def draw(self):
         self.screen.fill(config.white)
         self.all_objects.draw(self.screen)
+        self.menu.items.draw(self.menu.image)
 
     def run(self):
         while self.is_running:

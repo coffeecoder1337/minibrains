@@ -1,5 +1,6 @@
 import pygame
 import config
+import menu
 from pygame.locals import *
 
 pygame.init()
@@ -12,6 +13,11 @@ class Game:
         self.clock = pygame.time.Clock()
         self.is_running = True
 
+        self.all_objects = pygame.sprite.Group()
+        self.menu = menu.Menu()
+
+        self.all_objects.add(self.menu)
+
     def handler(self):
         for event in pygame.event.get():
             if event.type == QUIT:
@@ -19,6 +25,7 @@ class Game:
 
     def draw(self):
         self.screen.fill(config.white)
+        self.all_objects.draw(self.screen)
 
     def run(self):
         while self.is_running:

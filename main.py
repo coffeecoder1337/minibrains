@@ -8,6 +8,9 @@ pygame.init()
 
 class Game:
     def __init__(self):
+        pygame.display.set_icon(pygame.image.load('robot.png'))
+        pygame.display.set_caption('MiniBrains')
+
         self.screen = pygame.display.set_mode(config.size)
         self.screen_rect = self.screen.get_rect()
         self.clock = pygame.time.Clock()
@@ -31,7 +34,7 @@ class Game:
         while self.is_running:
             self.handler()
             self.draw()
-            pygame.display.update()
+            pygame.display.flip()
             self.clock.tick(60)
 
 game = Game()

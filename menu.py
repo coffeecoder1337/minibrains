@@ -29,7 +29,8 @@ class Menu(pygame.sprite.Sprite):
 
     def add_item(self):
         try:
-            x = self.items.sprites()[-1].rect.x + 40 + self.item_gutter # 1 слагаемое - х координата последнего элемента меню, 2 - ширина элемента меню, 3 - отступ между элементами
+            last_item = self.items.sprites()[-1]
+            x = last_item.rect.x + last_item.width + self.item_gutter
         except:
             x = 40
         item = MenuItem(x)

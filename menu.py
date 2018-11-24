@@ -2,8 +2,6 @@ import pygame
 import config
 from pygame.locals import *
 
-pygame.init()
-
 class MenuItem(pygame.sprite.Sprite):
     def __init__(self, x):
         pygame.sprite.Sprite.__init__(self)

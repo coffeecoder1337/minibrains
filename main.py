@@ -1,6 +1,7 @@
 import pygame
 import config
 import menu
+import player
 from pygame.locals import *
 
 pygame.init()
@@ -18,8 +19,10 @@ class Game:
 
         self.all_objects = pygame.sprite.Group()
         self.menu = menu.Menu()
+        self.player = player.Player(100, 100)
 
         self.all_objects.add(self.menu)
+        self.all_objects.add(self.player)
 
     def handler(self):
         for event in pygame.event.get():

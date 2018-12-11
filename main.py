@@ -2,6 +2,7 @@ import pygame
 import config
 import menu
 import player
+import platforms
 from pygame.locals import *
 
 pygame.init()
@@ -20,12 +21,16 @@ class Game:
 
         # objects
         self.all_objects = pygame.sprite.Group()
+        self.platforms_group = pygame.sprite.Group()
         self.menu = menu.Menu()
+        self.temp = platforms.Platform(100, 300)
         self.player = player.Player(100, 100)
 
         # add objects
         self.all_objects.add(self.menu)
         self.all_objects.add(self.player)
+        self.platforms_group.add(self.temp)
+        self.all_objects.add(self.temp)
 
     def handler(self):
         for event in pygame.event.get():
@@ -54,7 +59,7 @@ class Game:
     def run(self):
         while self.is_running:
             self.handler()
-            self.player.move()
+            self.player.move(self.platforms_group)
             self.draw()
             pygame.display.flip()
             self.clock.tick(60)

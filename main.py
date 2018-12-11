@@ -23,14 +23,11 @@ class Game:
         self.all_objects = pygame.sprite.Group()
         self.platforms_group = pygame.sprite.Group()
         self.menu = menu.Menu()
-        self.temp = platforms.Platform(100, 300)
         self.player = player.Player(100, 100)
 
         # add objects
         self.all_objects.add(self.menu)
         self.all_objects.add(self.player)
-        self.platforms_group.add(self.temp)
-        self.all_objects.add(self.temp)
 
     def handler(self):
         for event in pygame.event.get():

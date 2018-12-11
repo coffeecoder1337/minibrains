@@ -14,7 +14,16 @@ class Player(pygame.sprite.Sprite):
         self.rect.x = self.start_x
         self.rect.y = self.start_y
         self.speed = 5
+        self.speed_y = 2
+
+        self.jump_power = 10
+        self.gravity = 0.3
         self.direction = 0
+        self.up = False
+        self.on_ground = False
 
     def move(self):
         self.rect.x += (self.speed * self.direction)
+        if not self.on_ground:
+            self.speed_y += self.gravity
+            self.rect.y += self.speed_y

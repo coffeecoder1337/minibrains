@@ -29,6 +29,20 @@ class Game:
             if event.type == QUIT:
                 self.is_running = False
 
+            if event.type == KEYDOWN:
+
+                # --- move ---
+                if event.key in (K_a, K_LEFT):
+                    self.player.direction = -1
+                if event.key in (K_d, K_RIGHT):
+                    self.player.direction = 1
+
+            if event.type == KEYUP:
+                
+                # --- stop move ---
+                if event.key in (K_a, K_LEFT, K_d, K_RIGHT):
+                    self.player.direction = 0
+
     def draw(self):
         self.screen.fill(config.white)
         self.all_objects.draw(self.screen)
@@ -37,6 +51,7 @@ class Game:
     def run(self):
         while self.is_running:
             self.handler()
+            self.player.move()
             self.draw()
             pygame.display.flip()
             self.clock.tick(60)

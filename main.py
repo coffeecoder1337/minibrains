@@ -45,11 +45,19 @@ class Game:
                 if event.key in (K_d, K_RIGHT):
                     self.player.direction = 1
 
+                # --- jump ---
+                if event.key in (K_w, K_SPACE, K_UP):
+                    self.player.up = True
+
             if event.type == KEYUP:
 
                 # --- stop move ---
                 if event.key in (K_a, K_LEFT, K_d, K_RIGHT):
                     self.player.direction = 0
+
+                # --- stop jump ---
+                if event.key in (K_w, K_SPACE, K_UP):
+                    self.player.up = False
 
     def draw(self):
         self.screen.fill(config.white)

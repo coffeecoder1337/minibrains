@@ -63,9 +63,12 @@ class Creator:
                 self.is_running = False
 
             if event.type == MOUSEBUTTONDOWN:
-                self.select()
+                self.selected_object = self.select()
+
 
             if event.type == KEYDOWN:
+                if event.key == K_DELETE:
+                    self.selected_object.kill()
                 if event.key == K_t:
                     self.add(platforms.Platform, self.mouse[0], self.mouse[1], 'platforms')
 

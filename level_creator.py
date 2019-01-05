@@ -33,11 +33,21 @@ class Creator:
     def select(self):
         for object in self.all_objects:
             if (object.rect.x < self.mouse[0] < object.rect.right) and (object.rect.y < self.mouse[1] < object.rect.bottom):
+                try:
+                    object.selected = not object.selected
+                except:
+                    pass
                 return object
         return None
 
     def move(self):
-        pass
+        for obj in self.all_objects:
+            try:
+                if obj.selected:
+                    obj.rect.centerx = self.mouse[0]
+                    obj.rect.centery = self.mouse[1]
+            except:
+                pass
 
     def save_level(self):
         pass
@@ -67,6 +77,7 @@ class Creator:
     def run(self):
         while self.is_running:
             self.handler()
+            self.move()
             self.draw()
             pygame.display.flip()
             self.clock.tick(60)

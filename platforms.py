@@ -9,3 +9,4 @@ class Platform(pygame.sprite.Sprite):
         self.image.fill((0, 0, 0))
         self.rect.centerx = x
         self.rect.centery = y
+        self.selected = False

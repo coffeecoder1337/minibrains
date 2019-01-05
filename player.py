@@ -23,12 +23,18 @@ class Player(pygame.sprite.Sprite):
         self.on_ground = False
 
     def move(self, platforms):
-        self.rect.x += (self.speed * self.direction)
+        if self.up:
+            if self.on_ground:
+                self.speed_y = -self.jump_power
+
         if not self.on_ground:
             self.speed_y += self.gravity
-            self.rect.y += self.speed_y
-            self.collide(0, self.speed_y, platforms)
+
         self.on_ground = False
+
+        self.rect.y += self.speed_y
+        self.collide(0, self.speed_y, platforms)
+        self.rect.x += (self.speed * self.direction)
         self.collide(self.speed, 0, platforms)
 
     def collide(self, speed_x, speed_y, platforms):
@@ -39,7 +45,7 @@ class Player(pygame.sprite.Sprite):
                 if speed_x < 0:
                     self.rect.left = p.rect.right
 
-                if speed_y > 0:
+                if speed_y >= 0:
                     self.rect.bottom = p.rect.top
                     self.on_ground = True
                     self.speed_y = 0

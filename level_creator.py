@@ -24,8 +24,11 @@ class Creator:
         # add objects
         self.all_objects.add(self.menu)
 
-    def add(self):
-        pass
+    def add(self, obj, x, y, state = None):
+        temp_obj = obj(x, y)
+        self.all_objects.add(temp_obj)
+        if state == 'platform':
+            self.platforms_group.add(temp_obj)
 
     def remove(self):
         pass
@@ -41,8 +44,14 @@ class Creator:
 
     def handler(self):
         for event in pygame.event.get():
+            mouse = pygame.mouse.get_pos()
+
             if event.type == QUIT:
                 self.is_running = False
+
+            if event.type == KEYDOWN:
+                if event.key == K_t:
+                    self.add(platforms.Platform, mouse[0], mouse[1], 'platform')
 
     def draw(self):
         self.screen.fill(config.white)

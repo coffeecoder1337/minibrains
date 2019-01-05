@@ -30,8 +30,11 @@ class Creator:
         if state == 'platform':
             self.platforms_group.add(temp_obj)
 
-    def remove(self):
-        pass
+    def select(self):
+        for object in self.all_objects:
+            if (object.rect.x < self.mouse[0] < object.rect.right) and (object.rect.y < self.mouse[1] < object.rect.bottom):
+                return object
+        return None
 
     def move(self):
         pass
@@ -44,14 +47,17 @@ class Creator:
 
     def handler(self):
         for event in pygame.event.get():
-            mouse = pygame.mouse.get_pos()
+            self.mouse = pygame.mouse.get_pos()
 
             if event.type == QUIT:
                 self.is_running = False
 
+            if event.type == MOUSEBUTTONDOWN:
+                self.select()
+
             if event.type == KEYDOWN:
                 if event.key == K_t:
-                    self.add(platforms.Platform, mouse[0], mouse[1], 'platform')
+                    self.add(platforms.Platform, self.mouse[0], self.mouse[1], 'platforms')
 
     def draw(self):
         self.screen.fill(config.white)

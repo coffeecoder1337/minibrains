@@ -13,19 +13,19 @@ class Game:
         pygame.display.set_icon(pygame.image.load('robot.png'))
         pygame.display.set_caption('MiniBrains')
 
-        # screen
+        # --- screen ---
         self.screen = pygame.display.set_mode(config.size)
         self.screen_rect = self.screen.get_rect()
         self.clock = pygame.time.Clock()
         self.is_running = True
 
-        # objects
+        # --- objects ---
         self.all_objects = pygame.sprite.Group()
         self.platforms_group = pygame.sprite.Group()
         self.menu = menu.Menu()
         self.player = player.Player(100, 100)
 
-        # add objects
+        # --- add objects ---
         self.all_objects.add(self.menu)
         self.all_objects.add(self.player)
 

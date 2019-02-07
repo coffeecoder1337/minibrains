@@ -10,3 +10,4 @@ class Platform(pygame.sprite.Sprite):
         self.rect.centerx = x
         self.rect.centery = y
         self.selected = False
+        self.fixed = False

@@ -12,6 +12,7 @@ class MenuItem(pygame.sprite.Sprite):
         self.rect.x = x
         self.rect.y = 10
         self.image.fill(config.white)
+        self.fixed = True
 
 class Menu(pygame.sprite.Sprite):
     def __init__(self):
@@ -24,6 +25,7 @@ class Menu(pygame.sprite.Sprite):
         self.image.set_alpha(70)
         self.items = pygame.sprite.Group()
         self.item_gutter = 10
+        self.fixed = True
 
     def add_item(self):
         try:

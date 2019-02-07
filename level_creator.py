@@ -4,6 +4,8 @@ import menu
 import player
 import platforms
 import config
+import os
+import json
 
 
 class Creator:
@@ -33,12 +35,20 @@ class Creator:
     def select(self):
         for object in self.all_objects:
             if (object.rect.x < self.mouse[0] < object.rect.right) and (object.rect.y < self.mouse[1] < object.rect.bottom):
-                try:
-                    object.selected = not object.selected
-                except:
-                    pass
-                return object
+                if not object.fixed:
+                    try:
+                        object.selected = True
+                    except:
+                        pass
+                    return object
         return None
+    
+    def unselect(self):
+        for obj in self.all_objects:
+            try:
+                obj.selected = False
+            except:
+                pass
 
     def move(self):
         for obj in self.all_objects:
@@ -49,8 +59,18 @@ class Creator:
             except:
                 pass
 
-    def save_level(self):
+    def get_last_level(self):
+        lst = [int(file.split('.')[0]) for file in os.listdir('levels')]
+        if not lst:
+            return 0
+        return max(lst)
+
+    def create_data(self):
         pass
+
+    def save_level(self, data):
+        with open(f'{self.get_last_level() + 1}.json', 'w') as f:
+            json.dump(data, f, ensure_ascii = False, indent = 4)
 
     def load_level(self):
         pass
@@ -65,6 +85,8 @@ class Creator:
             if event.type == MOUSEBUTTONDOWN:
                 self.selected_object = self.select()
 
+            if event.type == MOUSEBUTTONUP:
+                self.unselect()
 
             if event.type == KEYDOWN:
                 if event.key == K_DELETE:

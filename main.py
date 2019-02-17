@@ -3,6 +3,7 @@ import config
 import menu
 import player
 import platforms
+import json
 from pygame.locals import *
 
 pygame.init()
@@ -12,6 +13,9 @@ class Game:
     def __init__(self):
         pygame.display.set_icon(pygame.image.load('robot.png'))
         pygame.display.set_caption('MiniBrains')
+
+        # --- level ---
+        self.level_now = 1
 
         # --- screen ---
         self.screen = pygame.display.set_mode(config.size)
@@ -56,12 +60,21 @@ class Game:
                 if event.key in (K_w, K_SPACE, K_UP):
                     self.player.up = False
 
+    def load_level(self):
+        with open(f'levels/{self.level_now}.json', 'r') as f:
+            data = json.load(f)
+        for platform in data['platforms']:
+            p = platforms.Platform(platform['x'], platform['y'])
+            self.platforms_group.add(p)
+            self.all_objects.add(p)
+
     def draw(self):
         self.screen.fill(config.white)
         self.all_objects.draw(self.screen)
         self.menu.items.draw(self.menu.image)
 
     def run(self):
+        self.load_level()
         while self.is_running:
             self.handler()
             self.player.move(self.platforms_group)

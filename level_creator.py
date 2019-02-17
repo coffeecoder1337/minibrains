@@ -12,18 +12,18 @@ class Creator:
     def __init__(self):
         pygame.display.set_caption("MiniBrains | Level Creator")
 
-        # screen
+        # --- screen---
         self.screen = pygame.display.set_mode(config.creator_size)
         self.screen_rect = self.screen.get_rect()
         self.clock = pygame.time.Clock()
         self.is_running = True
 
-        # objects
+        # --- objects---
         self.all_objects = pygame.sprite.Group()
         self.platforms_group = pygame.sprite.Group()
         self.menu = menu.Menu()
 
-        # add objects
+        # --- add objects---
         self.all_objects.add(self.menu)
 
     def add(self, obj, x, y, state = None):
@@ -66,7 +66,11 @@ class Creator:
         return max(lst)
 
     def create_data(self):
-        pass
+        data = dict()
+        data['platforms'] = list()
+        for platform in self.platforms_group:
+            data['platforms'].append(dict(x = platform.rect.x, y = platform.rect.y))
+        return data
 
     def save_level(self, data):
         with open(f'{self.get_last_level() + 1}.json', 'w') as f:
@@ -92,7 +96,7 @@ class Creator:
                 if event.key == K_DELETE:
                     self.selected_object.kill()
                 if event.key == K_t:
-                    self.add(platforms.Platform, self.mouse[0], self.mouse[1], 'platforms')
+                    self.add(platforms.Platform, self.mouse[0], self.mouse[1], 'platform')
 
     def draw(self):
         self.screen.fill(config.white)

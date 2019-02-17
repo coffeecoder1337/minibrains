@@ -73,7 +73,7 @@ class Creator:
         return data
 
     def save_level(self, data):
-        with open(f'{self.get_last_level() + 1}.json', 'w') as f:
+        with open(f'levels/{self.get_last_level() + 1}.json', 'w') as f:
             json.dump(data, f, ensure_ascii = False, indent = 4)
 
     def load_level(self):
@@ -97,6 +97,8 @@ class Creator:
                     self.selected_object.kill()
                 if event.key == K_t:
                     self.add(platforms.Platform, self.mouse[0], self.mouse[1], 'platform')
+                if event.key == K_s:
+                    self.save_level(self.create_data())
 
     def draw(self):
         self.screen.fill(config.white)

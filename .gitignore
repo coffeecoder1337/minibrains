@@ -1,6 +1,6 @@
-__pycache__/
-.git/
-venv/
-.vscode/
-images/
-levels/
+__pycache__
+.git
+venv
+.vscode
+images
+levels

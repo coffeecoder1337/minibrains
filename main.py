@@ -36,6 +36,9 @@ class Game:
         self.all_objects.add(self.menu)
         self.all_objects.add(self.player)
 
+        self.total_x = 0
+        self.total_y = 0
+
     def handler(self):
         for event in pygame.event.get():
             if event.type == QUIT:
@@ -64,19 +67,28 @@ class Game:
                     self.player.up = False
 
     def load_level(self):
-        with open(f'levels/{self.level_now}.json', 'r') as f:
-            data = json.load(f)
-        for platform in data['platforms']:
-            p = platforms.Platform(platform['x'], platform['y'])
-            self.platforms_group.add(p)
-            self.all_objects.add(p)
+        world_map = tmxreader.TileMapParser().parse_decode(f'levels/{self.level_now}.tmx')
+        resources = helperspygame.ResourceLoaderPygame()
+        resources.load(world_map)
+
+        sprite_layers = helperspygame.get_layers_from_map(resources)
+
+        platforms_layer = sprite_layers[0]
+        
+        for row in range(0, platforms_layer.num_tiles_x):
+            for col in range(0, platforms_layer.num_tiles_y):
+                if platforms_layer.content2D[col][row] is not None:
+                    p = platforms.Platform(row * 32, col * 32)
+                    self.all_objects.add(p)
+                    self.platforms_group.add(p)
+        self.total_x = platforms_layer.num_tiles_x * 32
+        self.total_y = platforms_layer.num_tiles_y * 32
 
     def draw(self):
         self.screen.fill(config.white)
         # self.all_objects.draw(self.screen)
         for a in self.all_objects:
-            if not a.fixed:
-                self.screen.blit(a.image, self.camera.apply(a))
+            self.screen.blit(a.image, self.camera.apply(a))
         self.menu.items.draw(self.menu.image)
 
     def camera_configure(self, camera, target_rect):
@@ -92,13 +104,10 @@ class Game:
         return Rect(l, t, w, h) 
 
     def run(self):
-        # total_level_width  = len(level[0]) * config.width
-        total_level_width = 2400
-        # total_level_height = len(level) * config.height
-        total_level_height = 600
         
-        self.camera = camera.Camera(self.camera_configure, total_level_width, total_level_height)
         self.load_level()
+        self.camera = camera.Camera(self.camera_configure, self.total_x, self.total_y)
+        
         while self.is_running:
             self.handler()
             self.player.move(self.platforms_group)

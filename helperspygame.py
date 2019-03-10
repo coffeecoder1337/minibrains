@@ -43,7 +43,7 @@ from math import ceil
 
 import pygame
 
-from . import tmxreader
+import tmxreader
 
 #  -----------------------------------------------------------------------------
 

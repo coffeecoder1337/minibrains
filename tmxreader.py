@@ -686,8 +686,8 @@ class TileMapParser(object):
     def _build_world_map(self, world_node):
         world_map = TileMap()
         self._set_attributes(world_node, world_map)
-        if world_map.version != "1.0":
-            raise VersionError('this parser was made for maps of version 1.0, found version %s' % world_map.version)
+        # if world_map.version != "1.0":
+        #     raise VersionError('this parser was made for maps of version 1.0, found version %s' % world_map.version)
         for node in self._get_nodes(world_node.childNodes, 'tileset'):
             self._build_tile_set(node, world_map)
         for node in self._get_nodes(world_node.childNodes, 'layer'):

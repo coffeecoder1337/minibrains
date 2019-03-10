@@ -5,6 +5,8 @@ import player
 import platforms
 import json
 import camera
+import tmxreader
+import helperspygame
 from pygame.locals import *
 
 pygame.init()

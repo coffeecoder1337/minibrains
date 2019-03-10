@@ -73,6 +73,18 @@ class Game:
         self.all_objects.draw(self.screen)
         self.menu.items.draw(self.menu.image)
 
+    def camera_configure(camera, target_rect):
+        l, t, _, _ = target_rect
+        _, _, w, h = camera
+        l, t = -l+WIN_WIDTH / 2, -t+WIN_HEIGHT / 2
+
+        l = min(0, l)
+        l = max(-(camera.width-WIN_WIDTH), l)
+        t = max(-(camera.height-WIN_HEIGHT), t)
+        t = min(0, t)
+
+        return Rect(l, t, w, h) 
+
     def run(self):
         self.load_level()
         while self.is_running:

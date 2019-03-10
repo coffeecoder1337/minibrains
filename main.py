@@ -4,6 +4,7 @@ import menu
 import player
 import platforms
 import json
+import camera
 from pygame.locals import *
 
 pygame.init()
@@ -70,26 +71,36 @@ class Game:
 
     def draw(self):
         self.screen.fill(config.white)
-        self.all_objects.draw(self.screen)
+        # self.all_objects.draw(self.screen)
+        for a in self.all_objects:
+            if not a.fixed:
+                self.screen.blit(a.image, self.camera.apply(a))
         self.menu.items.draw(self.menu.image)
 
-    def camera_configure(camera, target_rect):
+    def camera_configure(self, camera, target_rect):
         l, t, _, _ = target_rect
         _, _, w, h = camera
-        l, t = -l+WIN_WIDTH / 2, -t+WIN_HEIGHT / 2
+        l, t = -l + config.width / 2, -t + config.height / 2
 
         l = min(0, l)
-        l = max(-(camera.width-WIN_WIDTH), l)
-        t = max(-(camera.height-WIN_HEIGHT), t)
+        l = max(-(camera.width - config.width), l)
+        t = max(-(camera.height - config.height), t)
         t = min(0, t)
 
         return Rect(l, t, w, h) 
 
     def run(self):
+        # total_level_width  = len(level[0]) * config.width
+        total_level_width = 2400
+        # total_level_height = len(level) * config.height
+        total_level_height = 600
+        
+        self.camera = camera.Camera(self.camera_configure, total_level_width, total_level_height)
         self.load_level()
         while self.is_running:
             self.handler()
             self.player.move(self.platforms_group)
+            self.camera.update(self.player)
             self.draw()
             pygame.display.flip()
             self.clock.tick(60)

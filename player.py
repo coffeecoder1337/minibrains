@@ -1,4 +1,6 @@
 import pygame
+import images
+import pyganim
 from pygame.locals import *
 import config
 
@@ -17,13 +19,33 @@ class Player(pygame.sprite.Sprite):
         self.speed_y = 2
         self.selected = False
 
+        self.right = False
+        self.left = False
+
         self.jump_power = 10
         self.gravity = 0.3
         self.direction = 0
         self.up = False
         self.on_ground = False
 
+        self.image.set_colorkey(Color('#000000'))
+
+        ANIMATION_DELAY = 100
+        anim = []
+        for a in images.run_right:
+            anim.append((a, ANIMATION_DELAY))
+        self.anim_right = pyganim.PygAnimation(anim)
+        self.anim_right.play()
+
+        # anim = []
+        # for a in images.idle:
+        #     anim.append((a, ANIMATION_DELAY))
+        # self.idle = pyganim.PygAnimation(anim)
+        # self.idle.play()
+        # self.idle.blit(self.image, (0, 0))
+
     def move(self, platforms):
+        self.update()
         if self.up:
             if self.on_ground:
                 self.speed_y = -self.jump_power
@@ -53,3 +75,11 @@ class Player(pygame.sprite.Sprite):
                 if speed_y < 0:
                     self.rect.top = p.rect.bottom
                     self.speed_y = 0
+    
+    def update(self):
+        if self.right:
+            self.image.fill(Color('#ffffff'))
+            if self.up:
+                pass
+            else:
+                self.anim_right.blit(self.image, (0, 0))

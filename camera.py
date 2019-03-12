@@ -12,3 +12,6 @@ class Camera(object):
 
     def update(self, target):
         self.state = self.camera_func(self.state, target.rect)
+    
+    def reverse(self, pos):
+        return pos[0] - self.state.left, pos[1] - self.state.top

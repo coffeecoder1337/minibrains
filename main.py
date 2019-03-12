@@ -33,7 +33,8 @@ class Game:
         self.player = player.Player(100, 100)
 
         # --- add objects ---
-        self.all_objects.add(self.menu)
+        # self.all_objects.add(self.menu)
+        self.renderer = helperspygame.RendererPygame()
         self.all_objects.add(self.player)
 
         self.total_x = 0
@@ -49,8 +50,10 @@ class Game:
                 # --- move ---
                 if event.key in (K_a, K_LEFT):
                     self.player.direction = -1
+                    self.player.left = True
                 if event.key in (K_d, K_RIGHT):
                     self.player.direction = 1
+                    self.player.right = True
 
                 # --- jump ---
                 if event.key in (K_w, K_SPACE, K_UP):
@@ -61,6 +64,8 @@ class Game:
                 # --- stop move ---
                 if event.key in (K_a, K_LEFT, K_d, K_RIGHT):
                     self.player.direction = 0
+                    self.player.left = False
+                    self.player.right = False
 
                 # --- stop jump ---
                 if event.key in (K_w, K_SPACE, K_UP):
@@ -71,15 +76,14 @@ class Game:
         resources = helperspygame.ResourceLoaderPygame()
         resources.load(world_map)
 
-        sprite_layers = helperspygame.get_layers_from_map(resources)
+        self.sprite_layers = helperspygame.get_layers_from_map(resources)
 
-        platforms_layer = sprite_layers[0]
+        platforms_layer = self.sprite_layers[0]
         
         for row in range(0, platforms_layer.num_tiles_x):
             for col in range(0, platforms_layer.num_tiles_y):
                 if platforms_layer.content2D[col][row] is not None:
                     p = platforms.Platform(row * 32, col * 32)
-                    self.all_objects.add(p)
                     self.platforms_group.add(p)
         self.total_x = platforms_layer.num_tiles_x * 32
         self.total_y = platforms_layer.num_tiles_y * 32
@@ -87,9 +91,18 @@ class Game:
     def draw(self):
         self.screen.fill(config.white)
         # self.all_objects.draw(self.screen)
+        for sprite_layer in self.sprite_layers:
+                if not sprite_layer.is_object_group:
+                   self.renderer.render_layer(self.screen, sprite_layer)
+
         for a in self.all_objects:
             self.screen.blit(a.image, self.camera.apply(a))
-        self.menu.items.draw(self.menu.image)
+
+        center_offset = self.camera.reverse(config.center_of_screen)
+        self.renderer.set_camera_position_and_size(center_offset[0], center_offset[1], \
+                                                  config.width, config.height, "center")
+ 
+        # self.menu.items.draw(self.menu.image)
 
     def camera_configure(self, camera, target_rect):
         l, t, _, _ = target_rect
@@ -104,7 +117,7 @@ class Game:
         return Rect(l, t, w, h) 
 
     def run(self):
-        
+        renderer = helperspygame.RendererPygame()
         self.load_level()
         self.camera = camera.Camera(self.camera_configure, self.total_x, self.total_y)
         

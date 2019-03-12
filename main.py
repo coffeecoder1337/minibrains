@@ -4,6 +4,9 @@ import menu
 import player
 import platforms
 import json
+import camera
+import tmxreader
+import helperspygame
 from pygame.locals import *
 
 pygame.init()
@@ -33,6 +36,9 @@ class Game:
         self.all_objects.add(self.menu)
         self.all_objects.add(self.player)
 
+        self.total_x = 0
+        self.total_y = 0
+
     def handler(self):
         for event in pygame.event.get():
             if event.type == QUIT:
@@ -61,23 +67,51 @@ class Game:
                     self.player.up = False
 
     def load_level(self):
-        with open(f'levels/{self.level_now}.json', 'r') as f:
-            data = json.load(f)
-        for platform in data['platforms']:
-            p = platforms.Platform(platform['x'], platform['y'])
-            self.platforms_group.add(p)
-            self.all_objects.add(p)
+        world_map = tmxreader.TileMapParser().parse_decode(f'levels/{self.level_now}.tmx')
+        resources = helperspygame.ResourceLoaderPygame()
+        resources.load(world_map)
+
+        sprite_layers = helperspygame.get_layers_from_map(resources)
+
+        platforms_layer = sprite_layers[0]
+        
+        for row in range(0, platforms_layer.num_tiles_x):
+            for col in range(0, platforms_layer.num_tiles_y):
+                if platforms_layer.content2D[col][row] is not None:
+                    p = platforms.Platform(row * 32, col * 32)
+                    self.all_objects.add(p)
+                    self.platforms_group.add(p)
+        self.total_x = platforms_layer.num_tiles_x * 32
+        self.total_y = platforms_layer.num_tiles_y * 32
 
     def draw(self):
         self.screen.fill(config.white)
-        self.all_objects.draw(self.screen)
+        # self.all_objects.draw(self.screen)
+        for a in self.all_objects:
+            self.screen.blit(a.image, self.camera.apply(a))
         self.menu.items.draw(self.menu.image)
 
+    def camera_configure(self, camera, target_rect):
+        l, t, _, _ = target_rect
+        _, _, w, h = camera
+        l, t = -l + config.width / 2, -t + config.height / 2
+
+        l = min(0, l)
+        l = max(-(camera.width - config.width), l)
+        t = max(-(camera.height - config.height), t)
+        t = min(0, t)
+
+        return Rect(l, t, w, h) 
+
     def run(self):
+        
         self.load_level()
+        self.camera = camera.Camera(self.camera_configure, self.total_x, self.total_y)
+        
         while self.is_running:
             self.handler()
             self.player.move(self.platforms_group)
+            self.camera.update(self.player)
             self.draw()
             pygame.display.flip()
             self.clock.tick(60)

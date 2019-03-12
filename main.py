@@ -7,6 +7,7 @@ import json
 import camera
 import tmxreader
 import helperspygame
+import os
 from pygame.locals import *
 
 pygame.init()
@@ -30,12 +31,11 @@ class Game:
         self.all_objects = pygame.sprite.Group()
         self.platforms_group = pygame.sprite.Group()
         self.spikes = pygame.sprite.Group()
-        self.player = player.Player(100, 100)
-        self.exit = None
 
         # --- add objects ---
         self.renderer = helperspygame.RendererPygame()
-        self.all_objects.add(self.player)
+        # --- text ---
+        self.font_obj = pygame.font.Font(None, 25)
 
         self.total_x = 0
         self.total_y = 0
@@ -51,7 +51,7 @@ class Game:
     def check_win(self):
         if pygame.sprite.collide_rect(self.player, self.exit):
             if not self.is_last_level():
-                self.net_level()
+                self.next_level()
             else:
                 self.draw_win()
     
@@ -60,6 +60,7 @@ class Game:
         self.platforms_group.empty()
         self.player.platform_count = 0
         self.player.life = 3
+        self.level_now = 1
 
     def full_restart(self):
         self.reset()
@@ -81,14 +82,18 @@ class Game:
                         paused = False
                         self.full_restart()
                     if e.key == K_ESCAPE:
+                        paused = False
                         self.is_running = False
             self.screen.blit(text_surface_obj, text_rect_obj)
             pygame.display.update()
             self.clock.tick(60)
-        
+
+    def restart(self):
+        self.player.rect.x = self.start_x
+        self.player.rect.y = self.start_y - 64
 
     def is_last_level(self):
-        if self.get_last_level == self.level_now:
+        if self.get_last_level() == self.level_now:
             return True
         return False
 
@@ -116,10 +121,14 @@ class Game:
             pygame.display.update()
             self.clock.tick(60)
 
-
+    def next_level(self):
+        self.reset()
+        self.level_now += 1
+        self.load_level()
     
     def chek_lose(self):
-        pass
+        if self.player.life < 1:
+            self.full_restart()
 
     def check_hit(self):
         for object in self.platforms_group:
@@ -240,20 +249,29 @@ class Game:
                 self.all_objects.add(self.exit)
         
         player_layer = self.sprite_layers[2]
-        for player in player_layer.objects:
+        for pl in player_layer.objects:
             try:
-                x = player.x
-                y = player.y
+                self.start_x = pl.x
+                self.start_y = pl.y - 64
             except:
                 pass
             else:
-                self.player.rect.x = x
-                self.player.rect.y = y - 64
+                self.player = player.Player(self.start_x, self.start_y)
+                self.all_objects.add(self.player)
 
         self.total_x = platforms_layer.num_tiles_x * 32
         self.total_y = platforms_layer.num_tiles_y * 32
 
     def draw(self):
+        text_surface_obj = self.font_obj.render('Жизней: ' + str(self.player.life), True, (0, 0, 0))
+        text_rect_obj = text_surface_obj.get_rect()
+        text_rect_obj.x = 10
+        text_rect_obj.y = 10
+
+        text_surface_level = self.font_obj.render('Уровень: ' + str(self.level_now) + '/' + str(self.get_last_level()), True, (0, 0, 0))
+        text_rect_obj_level = text_surface_level.get_rect()
+        text_rect_obj_level.right = config.width - 10
+        text_rect_obj_level.y = 10
         self.mouse = pygame.mouse.get_pos()
         self.screen.fill(config.white)
         # self.all_objects.draw(self.screen)
@@ -264,6 +282,8 @@ class Game:
         for a in self.all_objects:
             self.screen.blit(a.image, self.camera.apply(a))
 
+        self.screen.blit(text_surface_obj, text_rect_obj)
+        self.screen.blit(text_surface_level, text_rect_obj_level)
         center_offset = self.camera.reverse(config.center_of_screen)
         self.renderer.set_camera_position_and_size(center_offset[0], center_offset[1], \
                                                   config.width, config.height, "center")
@@ -280,6 +300,11 @@ class Game:
 
         return Rect(l, t, w, h) 
 
+    def check_player_collide(self):
+        for s in self.spikes:
+            if pygame.sprite.collide_rect(self.player, s):
+                self.player.life -= 1
+                self.restart()
     def run(self):
         renderer = helperspygame.RendererPygame()
         self.load_level()
@@ -289,6 +314,9 @@ class Game:
             self.handler()
             self.player.move(self.platforms_group, self.spikes)
             self.move()
+            self.check_player_collide()
+            self.chek_lose()
+            self.check_win()
             self.camera.update(self.player)
             self.draw()
             pygame.display.flip()

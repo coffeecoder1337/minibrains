@@ -60,10 +60,10 @@ class Game:
         self.platforms_group.empty()
         self.player.platform_count = 0
         self.player.life = 3
-        self.level_now = 1
 
     def full_restart(self):
         self.reset()
+        self.level_now = 1
         self.load_level()
 
     def draw_win(self):

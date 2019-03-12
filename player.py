@@ -22,6 +22,7 @@ class Player(pygame.sprite.Sprite):
 
         self.platform_count = 0
         self.max_platform_count = 4
+        self.life = 3
 
         self.right = False
         self.left = False
@@ -32,7 +33,7 @@ class Player(pygame.sprite.Sprite):
         self.up = False
         self.on_ground = False
 
-        self.image.set_colorkey(Color('#000000'))
+        self.image.set_colorkey(Color('#ffffff'))
 
         ANIMATION_DELAY = 100
         anim = []
@@ -54,7 +55,7 @@ class Player(pygame.sprite.Sprite):
         self.idle.play()
         self.idle.blit(self.image, (0, 0))
 
-    def move(self, platforms):
+    def move(self, platforms, spikes):
         self.update()
         if self.up:
             if self.on_ground:
@@ -66,11 +67,11 @@ class Player(pygame.sprite.Sprite):
         self.on_ground = False
 
         self.rect.y += self.speed_y
-        self.collide(0, self.speed_y, platforms)
+        self.collide(0, self.speed_y, platforms, spikes)
         self.rect.x += (self.speed * self.direction)
-        self.collide(self.speed * self.direction, 0, platforms)
+        self.collide(self.speed * self.direction, 0, platforms, spikes)
 
-    def collide(self, speed_x, speed_y, platforms):
+    def collide(self, speed_x, speed_y, platforms, spikes):
         for p in platforms:
             if pygame.sprite.collide_rect(self, p):
                 if speed_x > 0:
@@ -85,6 +86,10 @@ class Player(pygame.sprite.Sprite):
                 if speed_y < 0:
                     self.rect.top = p.rect.bottom
                     self.speed_y = 0
+
+        for s in spikes:
+            if pygame.sprite.collide_rect(self, s):
+                self.life -= 1
     
     def update(self):
         if self.right:

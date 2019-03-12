@@ -21,3 +21,19 @@ class UserPlatform(Platform):
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
+
+class Spike(pygame.sprite.Sprite):
+    def __init__(self, x, y):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = images.spike
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
+
+class Exit(pygame.sprite.Sprite):
+    def __init__(self, x, y):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = images.exit
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y

@@ -87,6 +87,12 @@ class Game:
                     pl = self.check_hit()
                     if pl:
                         pl.kill()
+                        self.player.platform_count -= 1
+                
+                if event.button == 1:
+                    pl = self.check_hit()
+                    if pl:
+                        pl.selected = True
 
             if event.type == KEYDOWN:
 
@@ -100,11 +106,15 @@ class Game:
 
                 # --- place platform ---
                 if event.key == K_e:
+                   
                     pl = self.check_selected()
                     if not pl:
-                        self.add(platforms.Platform, self.mouse[0], self.mouse[1])
+                        if self.player.platform_count < self.player.max_platform_count:
+                            self.add(platforms.UserPlatform, self.mouse[0], self.mouse[1])
+                            self.player.platform_count += 1
                     else:
                         pl.kill()
+                        self.player.platform_count -= 1
 
                 # --- jump ---
                 if event.key in (K_w, K_SPACE, K_UP):

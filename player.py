@@ -20,6 +20,9 @@ class Player(pygame.sprite.Sprite):
         self.selected = False
         self.fixed = True
 
+        self.platform_count = 0
+        self.max_platform_count = 4
+
         self.right = False
         self.left = False
 

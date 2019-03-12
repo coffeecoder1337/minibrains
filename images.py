@@ -1,3 +1,5 @@
+import pygame
+
 run_right = [
     ('images/run/beg1.png'),
     ('images/run/beg2.png'),
@@ -30,3 +32,5 @@ idle = [
     ('images/idle/idle7.png'),
     ('images/idle/idle8.png')
 ]
+
+user_block = pygame.image.load('images/platforms/user_block.png')

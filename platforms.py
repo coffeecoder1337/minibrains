@@ -13,3 +13,11 @@ class Platform(pygame.sprite.Sprite):
         self.rect.y = y
         self.selected = False
         self.fixed = True
+
+class UserPlatform(Platform):
+    def __init__(self, x, y):
+        Platform.__init__(self, x, y)
+        self.image = images.user_block
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y

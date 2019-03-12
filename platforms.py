@@ -12,4 +12,4 @@ class Platform(pygame.sprite.Sprite):
         self.rect.x = x
         self.rect.y = y
         self.selected = False
-        self.fixed = False
+        self.fixed = True

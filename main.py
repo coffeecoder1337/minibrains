@@ -40,10 +40,53 @@ class Game:
         self.total_x = 0
         self.total_y = 0
 
+    def add(self, obj, x, y):
+        nx, ny = self.camera.reverse((x, y))
+        temp_obj = obj(nx, ny)
+        self.all_objects.add(temp_obj)
+        self.platforms_group.add(temp_obj)
+        temp_obj.selected = True
+        return temp_obj
+
+    def check_hit(self):
+        for object in self.platforms_group:
+            nx, ny = self.camera.reverse(self.mouse)
+            if (object.rect.x < nx < object.rect.right) and (object.rect.y < ny < object.rect.bottom):
+                self.unselect()
+                return object
+        return False
+    
+    def unselect(self):
+        for pl in self.platforms_group:
+            pl.selected = False
+
+    def move(self):
+        for pl in self.platforms_group:
+            if pl.selected:
+                x, y = self.camera.reverse(self.mouse)
+                pl.rect.centerx = x
+                pl.rect.centery = y
+
+    def check_selected(self):
+        for pl in self.platforms_group:
+            if pl.selected:
+                return pl
+        return False
+
     def handler(self):
         for event in pygame.event.get():
             if event.type == QUIT:
                 self.is_running = False
+
+            if event.type == MOUSEBUTTONUP:
+                if event.button == 1:
+                    self.unselect()
+
+            if event.type == MOUSEBUTTONDOWN:
+                if event.button == 3:
+                    pl = self.check_hit()
+                    if pl:
+                        pl.kill()
 
             if event.type == KEYDOWN:
 
@@ -54,6 +97,14 @@ class Game:
                 if event.key in (K_d, K_RIGHT):
                     self.player.direction = 1
                     self.player.right = True
+
+                # --- place platform ---
+                if event.key == K_e:
+                    pl = self.check_selected()
+                    if not pl:
+                        self.add(platforms.Platform, self.mouse[0], self.mouse[1])
+                    else:
+                        pl.kill()
 
                 # --- jump ---
                 if event.key in (K_w, K_SPACE, K_UP):
@@ -89,6 +140,7 @@ class Game:
         self.total_y = platforms_layer.num_tiles_y * 32
 
     def draw(self):
+        self.mouse = pygame.mouse.get_pos()
         self.screen.fill(config.white)
         # self.all_objects.draw(self.screen)
         for sprite_layer in self.sprite_layers:
@@ -124,6 +176,7 @@ class Game:
         while self.is_running:
             self.handler()
             self.player.move(self.platforms_group)
+            self.move()
             self.camera.update(self.player)
             self.draw()
             pygame.display.flip()

@@ -18,6 +18,7 @@ class Player(pygame.sprite.Sprite):
         self.speed = 5
         self.speed_y = 2
         self.selected = False
+        self.fixed = True
 
         self.right = False
         self.left = False
@@ -37,12 +38,18 @@ class Player(pygame.sprite.Sprite):
         self.anim_right = pyganim.PygAnimation(anim)
         self.anim_right.play()
 
-        # anim = []
-        # for a in images.idle:
-        #     anim.append((a, ANIMATION_DELAY))
-        # self.idle = pyganim.PygAnimation(anim)
-        # self.idle.play()
-        # self.idle.blit(self.image, (0, 0))
+        anim = []
+        for a in images.run_left:
+            anim.append((a, ANIMATION_DELAY))
+        self.anim_left = pyganim.PygAnimation(anim)
+        self.anim_left.play()
+
+        anim = []
+        for a in images.idle:
+            anim.append((a, ANIMATION_DELAY))
+        self.idle = pyganim.PygAnimation(anim)
+        self.idle.play()
+        self.idle.blit(self.image, (0, 0))
 
     def move(self, platforms):
         self.update()
@@ -79,7 +86,11 @@ class Player(pygame.sprite.Sprite):
     def update(self):
         if self.right:
             self.image.fill(Color('#ffffff'))
-            if self.up:
-                pass
-            else:
-                self.anim_right.blit(self.image, (0, 0))
+            self.anim_right.blit(self.image, (0, 0))
+        if self.left:
+            self.image.fill(Color('#ffffff'))
+            self.anim_left.blit(self.image, (0, 0))
+        if not self.left and not self.right:
+            self.image.fill(Color('#ffffff'))
+            self.idle.blit(self.image, (0, 0))
+

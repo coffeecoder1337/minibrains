@@ -58,6 +58,7 @@ class Game:
     def reset(self):
         self.all_objects.empty()
         self.platforms_group.empty()
+        self.spikes.empty()
         self.player.platform_count = 0
         self.player.life = 3
 

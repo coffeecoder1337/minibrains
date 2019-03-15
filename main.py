@@ -262,6 +262,7 @@ class Game:
 
         self.total_x = platforms_layer.num_tiles_x * 32
         self.total_y = platforms_layer.num_tiles_y * 32
+        self.camera = camera.Camera(self.camera_configure, self.total_x, self.total_y)
 
     def draw(self):
         text_surface_obj = self.font_obj.render('Жизней: ' + str(self.player.life), True, (0, 0, 0))
@@ -309,7 +310,7 @@ class Game:
     def run(self):
         renderer = helperspygame.RendererPygame()
         self.load_level()
-        self.camera = camera.Camera(self.camera_configure, self.total_x, self.total_y)
+        
         
         while self.is_running:
             self.handler()

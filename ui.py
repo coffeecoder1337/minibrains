@@ -8,12 +8,13 @@ class Ui:
         self.rect = rect
     
     def draw_health(self, life):
-        for x in range(1, life + 1):
+        for x in range(2, life + 2):
             rect = images.health.get_rect(topleft = (30 * x, 30))
             self.rect.blit(images.health, rect)
 
     def draw_head(self):
-        pass
+        rect = images.head.get_rect(topleft = (10, 20))
+        self.rect.blit(images.head, rect)
 
     def show(self):
         self.visible = True
@@ -23,6 +24,7 @@ class Ui:
 
     def draw(self, life):
         self.draw_health(life)
+        self.draw_head()
     
     def handle(self):
         pass

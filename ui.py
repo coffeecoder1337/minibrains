@@ -1,24 +1,32 @@
 import pygame
+import images
 from pygame.locals import *
 
 class Ui:
-    def __init__(self):
+    def __init__(self, rect):
         self.visible = True
+        self.rect = rect
     
+    def draw_health(self, life):
+        for x in range(1, life + 1):
+            rect = images.health.get_rect(topleft = (30 * x, 30))
+            self.rect.blit(images.health, rect)
+
+    def draw_head(self):
+        pass
+
     def show(self):
         self.visible = True
-        while self.visible:
-            self.loop()
     
     def hide(self):
         self.visible = True
 
-    def draw(self):
-        pass
+    def draw(self, life):
+        self.draw_health(life)
     
     def handle(self):
         pass
     
-    def loop(self):
+    def loop(self, life):
         self.handle()
-        self.draw()
+        self.draw(life)

@@ -8,6 +8,7 @@ import camera
 import tmxreader
 import helperspygame
 import os
+import ui
 from pygame.locals import *
 
 pygame.init()
@@ -26,6 +27,7 @@ class Game:
         self.screen_rect = self.screen.get_rect()
         self.clock = pygame.time.Clock()
         self.is_running = True
+        self.ui = ui.Ui(self.screen)
 
         # --- objects ---
         self.all_objects = pygame.sprite.Group()
@@ -263,18 +265,11 @@ class Game:
         self.total_y = platforms_layer.num_tiles_y * 32
 
     def draw(self):
-        text_surface_obj = self.font_obj.render('Жизней: ' + str(self.player.life), True, (0, 0, 0))
-        text_rect_obj = text_surface_obj.get_rect()
-        text_rect_obj.x = 10
-        text_rect_obj.y = 10
-
-        text_surface_level = self.font_obj.render('Уровень: ' + str(self.level_now) + '/' + str(self.get_last_level()), True, (0, 0, 0))
-        text_rect_obj_level = text_surface_level.get_rect()
-        text_rect_obj_level.right = config.width - 10
-        text_rect_obj_level.y = 10
         self.mouse = pygame.mouse.get_pos()
         self.screen.fill(config.white)
         # self.all_objects.draw(self.screen)
+        if self.ui.visible:
+            self.ui.loop(self.player.life)
         for sprite_layer in self.sprite_layers:
                 if not sprite_layer.is_object_group:
                    self.renderer.render_layer(self.screen, sprite_layer)
@@ -282,8 +277,6 @@ class Game:
         for a in self.all_objects:
             self.screen.blit(a.image, self.camera.apply(a))
 
-        self.screen.blit(text_surface_obj, text_rect_obj)
-        self.screen.blit(text_surface_level, text_rect_obj_level)
         center_offset = self.camera.reverse(config.center_of_screen)
         self.renderer.set_camera_position_and_size(center_offset[0], center_offset[1], \
                                                   config.width, config.height, "center")

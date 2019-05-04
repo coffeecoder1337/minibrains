@@ -1,7 +1,7 @@
 # minibrains
 <h1>MiniBrains is the logic game</h1>
 
-This game is just project for me and my friend-designer portfolio.
+This game is just project for me and my friend-designer.
 
 <h1>How to run?</h1>
 <p>1. Clone or download this repo</p>

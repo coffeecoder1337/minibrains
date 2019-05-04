@@ -6,10 +6,13 @@ class Ui:
     def __init__(self, rect):
         self.visible = True
         self.rect = rect
+        self.x_gutter = 30
+        self.y_gutter = 30
     
     def draw_health(self, life):
-        for x in range(2, life + 2):
-            rect = images.health.get_rect(topleft = (30 * x, 30))
+        offset = 2
+        for x in range(offset, life + offset):
+            rect = images.health.get_rect(topleft = (self.x_gutter * x, self.y_gutter))
             self.rect.blit(images.health, rect)
 
     def draw_head(self):

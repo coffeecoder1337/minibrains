@@ -187,9 +187,11 @@ class Game:
                 if event.key in (K_a, K_LEFT):
                     self.player.direction = -1
                     self.player.left = True
+                    self.player.right = False
                 if event.key in (K_d, K_RIGHT):
                     self.player.direction = 1
                     self.player.right = True
+                    self.player.left = False
 
                 # --- place platform ---
                 if event.key == K_e:
@@ -210,9 +212,14 @@ class Game:
             if event.type == KEYUP:
 
                 # --- stop move ---
-                if event.key in (K_a, K_LEFT, K_d, K_RIGHT):
-                    self.player.direction = 0
+                if event.key in (K_a, K_LEFT):
+                    if not self.player.right:
+                        self.player.direction = 0
                     self.player.left = False
+                
+                if event.key in (K_d, K_RIGHT):
+                    if not self.player.left:
+                        self.player.direction = 0
                     self.player.right = False
 
                 # --- stop jump ---

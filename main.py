@@ -56,7 +56,7 @@ class Game:
                 self.next_level()
             else:
                 self.draw_win()
-    
+
     def reset(self):
         self.all_objects.empty()
         self.platforms_group.empty()
@@ -128,7 +128,7 @@ class Game:
         self.reset()
         self.level_now += 1
         self.load_level()
-    
+
     def chek_lose(self):
         if self.player.life < 1:
             self.full_restart()
@@ -140,7 +140,7 @@ class Game:
                 self.unselect()
                 return object
         return False
-    
+
     def unselect(self):
         for pl in self.platforms_group:
             pl.selected = False
@@ -173,7 +173,7 @@ class Game:
                     if pl:
                         pl.kill()
                         self.player.platform_count -= 1
-                
+
                 if event.button == 1:
                     pl = self.check_hit()
                     if pl:
@@ -196,7 +196,7 @@ class Game:
 
                 # --- place platform ---
                 if event.key == K_e:
-                   
+
                     pl = self.check_selected()
                     if not pl:
                         if self.player.platform_count < self.player.max_platform_count:
@@ -217,7 +217,7 @@ class Game:
                     if not self.player.right:
                         self.player.direction = 0
                     self.player.left = False
-                
+
                 if event.key in (K_d, K_RIGHT):
                     if not self.player.left:
                         self.player.direction = 0
@@ -236,13 +236,13 @@ class Game:
 
         platforms_layer = self.sprite_layers[0]
         spike_layer = self.sprite_layers[1]
-        
+
         for row in range(0, platforms_layer.num_tiles_x):
             for col in range(0, platforms_layer.num_tiles_y):
                 if platforms_layer.content2D[col][row] is not None:
                     p = platforms.Platform(row * 32, col * 32)
                     self.platforms_group.add(p)
-                
+
                 if spike_layer.content2D[col][row] is not None:
                     s = platforms.Spike(row * 32, col * 32)
                     self.spikes.add(s)
@@ -257,7 +257,7 @@ class Game:
             else:
                 self.exit = platforms.Exit(x, y)
                 self.all_objects.add(self.exit)
-        
+
         player_layer = self.sprite_layers[2]
         for pl in player_layer.objects:
             try:
@@ -277,8 +277,6 @@ class Game:
         self.mouse = pygame.mouse.get_pos()
         self.screen.fill(config.white)
         # self.all_objects.draw(self.screen)
-        if self.ui.visible:
-            self.ui.loop(self.player.life)
         for sprite_layer in self.sprite_layers:
                 if not sprite_layer.is_object_group:
                    self.renderer.render_layer(self.screen, sprite_layer)
@@ -289,6 +287,8 @@ class Game:
         center_offset = self.camera.reverse(config.center_of_screen)
         self.renderer.set_camera_position_and_size(center_offset[0], center_offset[1], \
                                                   config.width, config.height, "center")
+        if self.ui.visible:
+            self.ui.loop(self.player.life)
 
     def camera_configure(self, camera, target_rect):
         l, t, _, _ = target_rect
@@ -300,7 +300,7 @@ class Game:
         t = max(-(camera.height - config.height), t)
         t = min(0, t)
 
-        return Rect(l, t, w, h) 
+        return Rect(l, t, w, h)
 
     def check_player_collide(self):
         for s in self.spikes:
@@ -310,8 +310,8 @@ class Game:
     def run(self):
         renderer = helperspygame.RendererPygame()
         self.load_level()
-        
-        
+
+
         while self.is_running:
             self.handler()
             self.player.move(self.platforms_group, self.spikes)

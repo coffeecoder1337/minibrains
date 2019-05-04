@@ -15,7 +15,7 @@ class Player(pygame.sprite.Sprite):
         self.start_y = y
         self.rect.x = self.start_x
         self.rect.y = self.start_y
-        self.speed = 5
+        self.speed = 4
         self.speed_y = 2
         self.selected = False
         self.fixed = True
@@ -27,7 +27,7 @@ class Player(pygame.sprite.Sprite):
         self.right = False
         self.left = False
 
-        self.jump_power = 10
+        self.jump_power = 7
         self.gravity = 0.3
         self.direction = 0
         self.up = False

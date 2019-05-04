@@ -36,3 +36,5 @@ idle = [
 user_block = pygame.image.load('images/platforms/user_block.png')
 spike = pygame.image.load('images/platforms/spike.png')
 exit = pygame.image.load('images/platforms/exit.png')
+health = pygame.image.load('images/ui/health.png')
+head = pygame.image.load('images/ui/head.png')

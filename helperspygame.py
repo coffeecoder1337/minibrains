@@ -270,9 +270,9 @@ class SpriteLayer(object):
 
                     self.content2D[ypos_new][xpos_new] = sprite
         self.bottom_margin = self._bottom_margin
-        if __debug__:
-            print('%s: Sprite Cache hits: %d' % \
-                                (self.__class__.__name__, _img_cache["hits"]))
+        # if __debug__:
+        #     print('%s: Sprite Cache hits: %d' % \
+        #                         (self.__class__.__name__, _img_cache["hits"]))
         del _img_cache
 
     def get_collapse_level(self):
@@ -499,8 +499,8 @@ class SpriteLayer(object):
         # HACK:
         new_layer._level = layer._level * 2
 
-        if __debug__ and level > 1:
-            print('%s: Sprite Cache hits: %d' % ("collapse", _img_cache["hits"]))
+        # if __debug__ and level > 1:
+        #     print('%s: Sprite Cache hits: %d' % ("collapse", _img_cache["hits"]))
         return new_layer
 
     @staticmethod

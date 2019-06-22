@@ -17,6 +17,7 @@
     #         self.clock.tick(60)
 
 import pygame
+import buttons
 from pygame.locals import *
 
 class Pause(pygame.sprite.Sprite):
@@ -32,6 +33,9 @@ class Pause(pygame.sprite.Sprite):
         self.paused = False
         self.clock = pygame.time.Clock()
         self.all_objects = all_objects
+        self.buttons = pygame.sprite.Group()
+        self.esc_btn = buttons.BaseButton((30, 30), (self.rect.width - 30, 0), (0, 0, 0), on_release=self.hide)
+        self.buttons.add(self.esc_btn)
     
     def show(self):
         self.all_objects.add(self)
@@ -41,17 +45,23 @@ class Pause(pygame.sprite.Sprite):
     def hide(self):
         self.all_objects.remove(self)
         self.paused = False
+
+    def get_relative_mouse(self):
+        return (self.mouse[0] - self.rect.x, self.mouse[1] - self.rect.y)
     
     def run(self):
         while self.paused:
+            self.mouse = pygame.mouse.get_pos()
             for e in pygame.event.get():
-                if e.type == QUIT:
-                    self.hide()
                 if e.type == KEYDOWN:
                     if e.key == K_RETURN:
                         self.hide()
+                if e.type == MOUSEBUTTONUP:
+                    if e.button == 1:
+                        self.esc_btn.check_release(self.get_relative_mouse())
 
             pygame.display.update()
+            self.buttons.draw(self.image)
             self.all_objects.draw(self.screen)
             self.clock.tick(60)
 
